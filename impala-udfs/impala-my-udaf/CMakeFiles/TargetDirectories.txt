@@ -1,0 +1,2 @@
+/var/lib/hadoop-hdfs/myrepo_hdfs/impala-udfs/impala-my-udaf/CMakeFiles/uda-sample-test.dir
+/var/lib/hadoop-hdfs/myrepo_hdfs/impala-udfs/impala-my-udaf/CMakeFiles/udasample.dir

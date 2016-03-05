@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/var/lib/hadoop-hdfs/myrepo_hdfs/impala-udfs/impala-my-udaf/uda-sample-test.cc
+iostream
+-
+math.h
+-
+impala_udf/uda-test-harness.h
+-
+uda-sample.h
+/var/lib/hadoop-hdfs/myrepo_hdfs/impala-udfs/impala-my-udaf/uda-sample.h
+
+/var/lib/hadoop-hdfs/myrepo_hdfs/impala-udfs/impala-my-udaf/uda-sample.h
+impala_udf/udf.h
+-
+

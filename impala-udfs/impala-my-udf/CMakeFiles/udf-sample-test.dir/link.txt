@@ -1,0 +1,1 @@
+/usr/bin/c++    -g -ggdb    CMakeFiles/udf-sample-test.dir/my-hash-udf-test.cc.o  -o build/udf-sample-test -rdynamic build/libudfsample.so -lImpalaUdf -Wl,-rpath,/var/lib/hadoop-hdfs/myrepo_hdfs/impala-udfs/impala-my-udf/build 
