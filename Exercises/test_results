@@ -1,0 +1,82 @@
+1. create a table, query it while it has 5, 500, 5000
+
+Schema of the table:
+
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| result                                                                                                                                                       |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| CREATE EXTERNAL TABLE default.filecount_test5 (                                                                                                              |
+|   id BIGINT,                                                                                                                                                 |
+|   val INT,                                                                                                                                                   |
+|   zerofill STRING,                                                                                                                                           |
+|   name STRING,                                                                                                                                               |
+|   assertion BOOLEAN,                                                                                                                                         |
+|   city STRING,                                                                                                                                               |
+|   state STRING                                                                                                                                               |
+| )                                                                                                                                                            |
+| ROW FORMAT DELIMITED FIELDS TERMINATED BY ','                                                                                                                |
+| WITH SERDEPROPERTIES ('serialization.format'=',', 'field.delim'=',')                                                                                         |
+| STORED AS TEXTFILE                                                                                                                                           |
+| LOCATION 'hdfs://host-10-17-80-187.coe.cloudera.com:8020/user/impala/Impala_Exercises/test_10'                                                               |
+| TBLPROPERTIES ('numFiles'='0', 'COLUMN_STATS_ACCURATE'='true', 'transient_lastDdlTime'='1457249217', 'numRows'='88330', 'totalSize'='0', 'rawDataSize'='-1') |
++--------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+
+QUERIES Executed:
+
+select max(name) from filecount_test5;
+select max(name) from filecount_test500;
+select max(name) from filecount_test5000;
+
+/* --- Three aggregations plus some filtering. --- */
+
+select avg(val), min(name), max(name) from filecount_test5
+  where name between 'A' and 'D';
+
+select avg(val), min(name), max(name) from filecount_test500
+  where name between 'A' and 'D';
+
+select avg(val), min(name), max(name) from filecount_test5000
+  where name between 'A' and 'D';
+
+
+
+=================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SELECT DISTINCT
+  concat('insert into partitioned_table partition (year=',
+    cast(year as string),', month=',cast(month as string),
+    ') select c1, c2, c3 from raw_data where year=',
+    cast(year as string),' and month=',cast(month as string),';') AS command
+  FROM raw_data;
+
+
+CREATE TABLE raw_data
+  (year SMALLINT, month TINYINT, c1 STRING, c2 INT, c3 BOOLEAN);
+-- Load some data into this unpartitioned table...
+INSERT INTO
+
+CREATE TABLE partitioned_table (c1 STRING, c2 INT, c3 BOOLEAN)
+  PARTITIONED BY (year SMALLINT, month TINYINT);
+-- Copy data into the partitioned table, one partition at a time.
+INSERT INTO partitioned_table PARTITION (year=2000, month=1)
+  SELECT c1, c2, c3 FROM raw_data WHERE year=2000 AND month=1;
+INSERT INTO partitioned_table PARTITION (year=2000, month=2)
+  SELECT c1, c2, c3 FROM raw_data WHERE year=2000 AND month=2;
+
+

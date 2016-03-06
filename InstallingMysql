@@ -1,0 +1,83 @@
+Installing Mysql
+
+wget http://dev.mysql.com/get/mysql57-community-release-el6-7.noarch.rpm
+yum localinstall mysql57-community-release-el6-7.noarch.rpm
+yum repolist enabled | grep "mysql.*-community.*"
+yum install mysql-community-server
+mysql_secure_installation
+
+
+[mysqld]
+transaction-isolation=READ-COMMITTED
+# Disabling symbolic-links is recommended to prevent assorted security risks;
+# to do so, uncomment this line:
+# symbolic-links=0
+
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+
+key_buffer_size         = 32M
+max_allowed_packet      = 16M
+thread_stack            = 256K
+thread_cache_size       = 64
+query_cache_limit       = 8M
+query_cache_size        = 64M
+query_cache_type        = 1
+# Important: see Configuring the Databases and Setting max_connections
+max_connections         = 550
+
+# log-bin should be on a disk with enough free space
+log-bin=/var/lib/mysql/log-bin
+
+# For MySQL version 5.1.8 or later. Comment out binlog_format for older versions.
+binlog_format           = mixed
+
+read_buffer_size = 2M
+read_rnd_buffer_size = 16M
+sort_buffer_size = 8M
+join_buffer_size = 8M
+
+# InnoDB settings
+innodb_file_per_table = 1
+innodb_flush_log_at_trx_commit  = 2
+innodb_log_buffer_size          = 64M
+innodb_buffer_pool_size         = 4G
+innodb_thread_concurrency       = 8
+innodb_flush_method             = O_DIRECT
+innodb_log_file_size = 512M
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid
+
+chmod 777 /var/lib/mysql
+mysql_install_db --datadir=/var/lib/mysql/
+SET PASSWORD = PASSWORD('cloudera');
+
+create database amon DEFAULT CHARACTER SET utf8;
+grant all on amon.* TO 'amon'@'%' IDENTIFIED BY 'amon_password';
+create database smon DEFAULT CHARACTER SET utf8;
+grant all on smon.* TO 'smon'@'%' IDENTIFIED BY 'smon_password';
+create database rman DEFAULT CHARACTER SET utf8;
+grant all on rman.* TO 'rman'@'%' IDENTIFIED BY 'rman';
+create database hmon DEFAULT CHARACTER SET utf8;
+grant all on hmon.* TO 'hmon'@'%' IDENTIFIED BY 'hmon_password';
+create database hive DEFAULT CHARACTER SET utf8;
+grant all on hive.* TO 'hive'@'%' IDENTIFIED BY 'hive_password';
+create database nav DEFAULT CHARACTER SET utf8;
+grant all on nav.* TO 'nav'@'%' IDENTIFIED BY 'nav_password';
+create database navms DEFAULT CHARACTER SET utf8;
+grant all on navms.* TO 'navms'@'%' IDENTIFIED BY 'navms_password';
+
+
+2016-03-05T17:25:14.346738Z 0 [ERROR] You have enabled the binary log, but you haven't provided the mandatory server-id. Please refer to the proper server start-up parameters documentation
+2016-03-05T17:25:14.346781Z 0 [ERROR] Aborting
+
+Agent Link
+http://mirror.infra.cloudera.com/archive/cm5/redhat/6/x86_64/cm/5.6.0/
+http://mirror.infra.cloudera.com/archive/cm5/redhat/6/x86_64/cm/RPM-GPG-KEY-cloudera
+
+CDH
+http://mirror.infra.cloudera.com/archive/cdh5/parcels/5.6.0/
+
