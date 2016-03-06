@@ -1,0 +1,44 @@
+# Trying Different Compressed_files:
+
+# gzip	org.apache.hadoop.io.compress.GzipCodec
+# bzip2	org.apache.hadoop.io.compress.BZip2Codec
+# LZO	com.hadoop.compression.lzo.LzopCodec
+# LZ4	org.apache.hadoop.io.compress.Lz4Codec
+# Snappy	org.apache.hadoop.io.compress.SnappyCodec
+
+
+# Gzip
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.GzipCodec;
+Drop table large_compressed_table_gzip; CREATE TABLE large_compressed_table_gzip(creation_ts string, creator string, deletion_timestamp string, deletor string, subject string, predicate string, object string, language string) ;
+INSERT INTO TABLE large_compressed_table_gzip SELECT * FROM large_uncompressed_table;"
+
+#BZip2Codec:
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec;
+Drop table large_compressed_table_bzip; CREATE TABLE large_compressed_table_bzip(creation_ts string, creator string, deletion_timestamp string, deletor string, subject string, predicate string, object string, language string) ;
+ INSERT INTO TABLE large_compressed_table_bzip SELECT * FROM large_uncompressed_table;"
+
+
+#Lz4:
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.Lz4Codec;
+Drop table large_compressed_table_lz4; CREATE TABLE large_compressed_table_lz4(creation_ts string, creator string, deletion_timestamp string, deletor string, subject string, predicate string, object string, language string) ;
+ INSERT INTO TABLE large_compressed_table_lz4 SELECT * FROM large_uncompressed_table;"
+
+#SnappyCodec:
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.SnappyCodec;
+Drop table large_compressed_table_snappy; CREATE TABLE large_compressed_table_snappy(creation_ts string, creator string, deletion_timestamp string, deletor string, subject string, predicate string, object string, language string) ;
+ INSERT INTO TABLE large_compressed_table_snappy SELECT * FROM large_uncompressed_table;"
+
+#bzip2
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec; Create external table large_compressed_table_spatial_bzip2(geom string, gid string,x1 string,y1 string,x2 string,y2 string,ansicode string,linearid string,fullname string, artpath string,mtfcc string, dummy string, dummy2 string) row format delimited fields terminated by \",\" location '/user/impala/bzip2_files/';"
+
+
