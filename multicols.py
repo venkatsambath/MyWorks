@@ -27,9 +27,7 @@ def random_city():
 if __name__ == '__main__':
 
 # Produce text format data with different kinds of separators.
-  possible_separators = { "pipe": "|", "comma": ",", "csv": ",",
-    "ctrl-a": "<xref href="01", "hash": "#", "bang": "!", "tab": "\t",
-    "tsv": "\t" }
+  possible_separators = { "pipe": "|", "comma": ",", "csv": ",", "tab": "\t","tsv": "\t" }
 
 # Accept number of rows to generate as command-line argument.
   try:
@@ -50,7 +48,7 @@ if __name__ == '__main__':
     sep = possible_separators[sep_arg]
   except:
 #    If no separator is specified, fall back to the Impala default.
-    sep = "<xref href="01"
+    sep = ","
 
 # Generate requested number of rows of data.
   for i in xrange(count):
