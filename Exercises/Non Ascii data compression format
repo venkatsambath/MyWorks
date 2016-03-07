@@ -1,0 +1,21 @@
+Non Ascii data compression format
+
+#bzip2
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.BZip2Codec; Create external table large_compressed_table_spatial_bzip2(geom string, gid string,x1 string,y1 string,x2 string,y2 string,ansicode string,linearid string,fullname string, artpath string,mtfcc string, dummy string, dummy2 string) row format delimited fields terminated by \",\" location '/user/impala/bzip2_files/';"
+
+#snappy
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.SnappyCodec; Create table large_compressed_table_spatial_snappy(geom string, gid string,x1 string,y1 string,x2 string,y2 string,ansicode string,linearid string,fullname string, artpath string,mtfcc string, dummy string, dummy2 string) row format delimited fields terminated by \",\";INSERT INTO TABLE large_compressed_table_spatial_snappy SELECT * FROM large_compressed_table_spatial_bzip2;"
+
+#Lz4
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.Lz4Codec; Create table large_compressed_table_spatial_lz4(geom string, gid string,x1 string,y1 string,x2 string,y2 string,ansicode string,linearid string,fullname string, artpath string,mtfcc string, dummy string, dummy2 string) row format delimited fields terminated by \",\";INSERT INTO TABLE large_compressed_table_spatial_lz4 SELECT * FROM large_compressed_table_spatial_bzip2;"
+
+#Gzip
+
+beeline -u "jdbc:hive2://host-10-17-80-187.coe.cloudera.com:10000/default;" -n hive -p dummy -e "SET mapreduce.output.fileoutputformat.compress=true;SET hive.exec.compress.output=true;
+SET mapreduce.output.fileoutputformat.compress.codec=org.apache.hadoop.io.compress.GzipCodec; Create table large_compressed_table_spatial_gzip(geom string, gid string,x1 string,y1 string,x2 string,y2 string,ansicode string,linearid string,fullname string, artpath string,mtfcc string, dummy string, dummy2 string) row format delimited fields terminated by \",\";INSERT INTO TABLE large_compressed_table_spatial_gzip SELECT * FROM large_compressed_table_spatial_bzip2;"

@@ -1,0 +1,24 @@
+Hi Team,
+
+I tried 
+
+
+
+echo '
+# S3 Bucket
+# See http://code.google.com/p/s3fs/wiki/FuseOverAmazon
+s3fs anainawati /mnt/s3 fuse use_cache=/tmp/s3-cache,allow_other 0 0
+' | sudo tee --append /etc/fstab
+ 
+# Create a cache directory for S3FS to use.  This will help speed up reads & writes.
+mkdir /tmp/s3-cache
+ 
+# Create a cron job to clean up the cache once a month
+# (you can change it to weekly or even daily if you want)
+echo '
+#!/bin/bash
+find /tmp/s3-cache -type f -exec rm {} \;
+' | sudo tee /etc/cron.monthly/00-clear-s3-cache
+ 
+# Mount the bucket!
+sudo mount /mnt/s3
