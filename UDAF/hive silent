@@ -1,0 +1,18 @@
+Hi Eisen,
+
+Thank you for contacting cloudera support. 
+
+My name is Venkat, Customer Operations Engineer from IST timezone. The patch HIVE-10202 has already been backported to CDH5.3.4 and later versions. 
+
+Could you please try running the query with --silent option set to true and try again.
+
+For Example:
+beeline -u "jdbc:hive2://<hostname>:10000/default" -n hive -p dummy --silent=true --showHeader=false --outputformat=tsv2 -f test.hql
+
+The reason being that when running a query through beeline the default value for --silent option will be false which makes the results to have the prompts being shown in the STDOUT. This can be overridden by setting the parameter to false.
+
+Let me know if you have any questions.
+
+Thanks,
+Venkat
+

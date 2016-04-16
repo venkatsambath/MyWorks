@@ -1,0 +1,28 @@
+Hi Team,
+
+Please find the steps as follows.
+
+First check the hive-site.xml in /var/run/cloudera/scm-agent-process/hive<dir> for the property hive.compute.query.using.stats. Check if this is set to true.
+
+Step1: From beeline Create a sample table , insert a value to it and run select count on the table
+
+create table dummy(a int,b int);
+
+insert into table dummy values(1,2);
+
+select count(*) from dummy;
+
+You will notice the count as 1
+
+Step2: From impala-shell insert another row to the same table. 
+
+insert into table dummy values(3,4);
+
+Step3: From beeline run the count query again and if you notice the count still being shown as 1, then it confirms that the CDH is hit by the issue.
+
+Step4: If you notice that your CDH version is having the issue. set hive.compute.query.using.stats=false; in beeline and run the count query again, this time the query will take a longer time to run and the final results will give you the right count of rows(2)
+
+Please let me know if you are noticing issue in CDH5.4.2
+
+Thanks,
+Venkat
