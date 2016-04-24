@@ -49,3 +49,8 @@ describe formatted sample_data;
 refresh sample_data;
 select count(*) from sample_data;
 
+create table sample_data1 like sample_data;
+insert overwrite table sample_data1 select * from sample_data;
+
+
+
