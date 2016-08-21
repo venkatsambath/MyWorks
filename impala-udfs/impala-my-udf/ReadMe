@@ -1,0 +1,123 @@
+Step1:
+=====
+
+install the impala-udf-devel
+
+a.
+Paster the repo in /etc/yum.repos.d/impala.repo -- I use redhat and hence this might vary for debians
+
+[cloudera-impala]
+name=Impala
+baseurl=http://archive.cloudera.com/impala/redhat/6/x86_64/impala/1/
+gpgkey = http://archive.cloudera.com/impala/redhat/6/x86_64/impala/RPM-GPG-KEY-cloudera    
+gpgcheck = 1
+
+
+b.
+yum info impala-udf-devel
+                                                                                                                                                       | 2.9 kB     00:00     
+Available Packages
+Name        : impala-udf-devel
+Arch        : x86_64
+Version     : 1.4.0
+Release     : 1.impala1.4.0.p0.7.el6
+Size        : 46 k
+Repo        : cloudera-impala
+Summary     : Impala UDF development package
+URL         : http://www.cloudera.com
+License     : ASL 2.0
+Description : Development headers and libraries for writing user-defined-functions for Impala queries
+
+c. sudo yum install gcc-c++ cmake boost-devel
+   sudo yum install impala-udf-devel
+
+
+Step2:
+=====
+
+Compile your UDF
+===============
+
+a. ls -al
+total 24
+drwxr-xr-x 2 root root 4096 Aug 21 07:03 .
+drwxr-xr-x 5 root root 4096 Aug 21 06:45 ..
+-rw-r--r-- 1 root root 1882 Aug 21 07:02 CMakeLists.txt
+-rw-r--r-- 1 root root  520 Aug 21 06:45 my-hash-udf-test.cc
+-rw-r--r-- 1 root root  495 Aug 21 06:58 my-hash-udf.cc
+-rw-r--r-- 1 root root  178 Aug 21 06:45 my-hash-udf.h
+
+b. added cout to my udf
+
+#include "my-hash-udf.h"
+#include <cctype>
+#include <cmath>
+#include <string>
+#include <iostream>
+using namespace std;
+
+IntVal HASHUdf(FunctionContext* context, const StringVal& input) {
+
+if (input.is_null) return IntVal::null();
+
+        int index;
+        int SIZE = 123;
+        int sum = 0;
+        uint8_t *ptr;
+
+        for (ptr = input.ptr,index = 0; index < input.len; index++,ptr++)
+            sum = sum + int(*ptr);
+           cout<<"I am printing my udf :"<<endl;
+        return IntVal(sum % SIZE);
+
+}
+
+c. cmake .
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/MyWorks/impala-udfs/impala-my-udf
+[root@host-10-17-100-193 impala-my-udf]# make
+Scanning dependencies of target udfsample
+[ 50%] Building CXX object CMakeFiles/udfsample.dir/my-hash-udf.cc.o
+Linking CXX shared library build/libudfsample.so
+[ 50%] Built target udfsample
+Scanning dependencies of target udf-sample-test
+[100%] Building CXX object CMakeFiles/udf-sample-test.dir/my-hash-udf-test.cc.o
+Linking CXX executable build/udf-sample-test
+[100%] Built target udf-sample-test
+
+
+e. make
+[ 50%] Built target udfsample
+[100%] Built target udf-sample-test
+
+Step3:
+=====
+
+Registering the function:
+========================
+create function myhash (string) returns int location '/user/hive/impala/libudfsample.so' symbol='HASHUdf';
+
+
+Step4:
+=====
+
+Running the query and grepping the output:
+==========================================
+
+tail -f /var/log/impalad/impalad.INFO | grep "I am printing my "
+I0821 08:22:35.878401 13831 Planner.java:129] finalize plan fragmeI am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+I am printing my udf :
+
+
+
+
+
